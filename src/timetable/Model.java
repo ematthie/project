@@ -4,8 +4,10 @@ import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import timetable.DAO.*;
 import timetable.entity.*;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,13 +18,13 @@ public class Model implements Observable {
     private ObservableList<Student> students = FXCollections.observableArrayList();
     private ObservableList<Location> locations = FXCollections.observableArrayList();
     private ObservableList<Teacher> teachers = FXCollections.observableArrayList();
-    private String url; // = "jdbc:sqlite::resource:timetable/lectures.db";
+    private DataAccesProvider dataAccesProvider;
 
     public ArrayList<Lecture> getLectures() {
         return lectures;
     }
 
-    public void setLectures(ArrayList<Lecture> lectures) {
+    private void setLectures(ArrayList<Lecture> lectures) {
         this.lectures = lectures;
         fireInvalidationEvent();
     }
@@ -39,7 +41,7 @@ public class Model implements Observable {
         listenerList.remove(listener);
     }
 
-    public void fireInvalidationEvent() {
+    private void fireInvalidationEvent() {
         for (InvalidationListener listener : listenerList) {
             listener.invalidated(this);
         }
@@ -49,7 +51,7 @@ public class Model implements Observable {
         return periods;
     }
 
-    public void setPeriods(ArrayList<Period> periods) {
+    private void setPeriods(ArrayList<Period> periods) {
         this.periods = periods;
         fireInvalidationEvent();
     }
@@ -58,7 +60,7 @@ public class Model implements Observable {
         return students;
     }
 
-    public void setStudents(ArrayList<Student> students) {
+    private void setStudents(ArrayList<Student> students) {
         this.students = FXCollections.observableArrayList(students);
         fireInvalidationEvent();
     }
@@ -67,7 +69,7 @@ public class Model implements Observable {
         return locations;
     }
 
-    public void setLocations(ArrayList<Location> locations) {
+    private void setLocations(ArrayList<Location> locations) {
         this.locations = FXCollections.observableArrayList(locations);
         fireInvalidationEvent();
     }
@@ -76,17 +78,64 @@ public class Model implements Observable {
         return teachers;
     }
 
-    public void setTeachers(ArrayList<Teacher> teachers) {
+    private void setTeachers(ArrayList<Teacher> teachers) {
         this.teachers = FXCollections.observableArrayList(teachers);
         fireInvalidationEvent();
     }
 
-    public String getUrl() {
-        return url;
+    public void setUrl(String url) {
+        dataAccesProvider = new JDBCDataAccesProvider(url);
+        try (DataAccesContext dac = dataAccesProvider.getDataAccessContext()) {
+            PeriodDAO dao = dac.getPeriodDAO();
+            setPeriods(dao.selectElements());
+        } catch (Exception e) {
+            System.err.println("Oopsie, didn't mean to!");
+        }
+        try (DataAccesContext dac = dataAccesProvider.getDataAccessContext()) {
+            StudentDAO dao = dac.getStudentDAO();
+            setStudents(dao.selectElements());
+        } catch (Exception e) {
+            System.err.println("Oopsie, didn't mean to!");
+        }
+        try (DataAccesContext dac = dataAccesProvider.getDataAccessContext()) {
+            LocationDAO dao = dac.getLocationDAO();
+            setLocations(dao.selectElements());
+        } catch (Exception e) {
+            System.err.println("Oopsie, didn't mean to!");
+        }
+        try (DataAccesContext dac = dataAccesProvider.getDataAccessContext()) {
+            TeacherDAO dao = dac.getTeacherDAO();
+            setTeachers(dao.selectElements());
+        } catch (Exception e) {
+            System.err.println("Oopsie, didn't mean to!");
+        }
+        fireInvalidationEvent();
     }
 
-    public void setUrl(String url) {
-        this.url = url;
-        fireInvalidationEvent();
+    public void updateModelByStudents(int id) {
+        try (DataAccesContext dac = dataAccesProvider.getDataAccessContext()) {
+            LectureDAO dao = dac.getLectureDAO();
+            setLectures(dao.selectElementsByRichting(id));
+        } catch (Exception e) {
+            System.err.println("Oopsie, didn't mean to!");
+        }
+    }
+
+    public void updateModelByLocation(int id) {
+        try (DataAccesContext dac = dataAccesProvider.getDataAccessContext()) {
+            LectureDAO dao = dac.getLectureDAO();
+            setLectures(dao.selectElementsByLocatie(id));
+        } catch (Exception e) {
+            System.err.println("Oopsie, didn't mean to!");
+        }
+    }
+
+    public void updateModelByTeacher(int id) {
+        try (DataAccesContext dac = dataAccesProvider.getDataAccessContext()) {
+            LectureDAO dao = dac.getLectureDAO();
+            setLectures(dao.selectElementsByTeacher(id));
+        } catch (Exception e) {
+            System.err.println("Oopsie, didn't mean to!");
+        }
     }
 }

@@ -1,24 +1,21 @@
 package timetable;
 
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class JDBCDataAccesProvider implements DataAccesProvider, InvalidationListener {
+public class JDBCDataAccesProvider implements DataAccesProvider {
 
-    private Model model;
+    private String url;
 
-    public JDBCDataAccesProvider(Model model) {
-        this.model = model;
+    public JDBCDataAccesProvider(String url) {
+        this.url = url;
     }
 
     public java.sql.Connection getConnection() {
         Connection conn = null;
         try {
-            conn = DriverManager.getConnection(model.getUrl());
+            conn = DriverManager.getConnection("jdbc:sqlite:" + url);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -32,10 +29,5 @@ public class JDBCDataAccesProvider implements DataAccesProvider, InvalidationLis
         } catch (SQLException ex) {
             throw new SQLException("Could not create data access context", ex);
         }
-    }
-
-    @Override
-    public void invalidated(Observable observable) {
-
     }
 }

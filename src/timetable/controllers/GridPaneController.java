@@ -25,7 +25,7 @@ public class GridPaneController implements InvalidationListener {
     public GridPaneController(Model model) {
         this.periods = model.getPeriods();
         this.model = model;
-        model.addListener(this::invalidated);
+        model.addListener(this);
         this.overlappingen = new int[5][periods.size()];
         plaats();
     }
@@ -48,14 +48,6 @@ public class GridPaneController implements InvalidationListener {
         column5.setPercentWidth(19);
         basis();
         gridPane.getColumnConstraints().addAll(column0, column1, column2, column3, column4, column5);
-        RowConstraints rowConstraints0 = new RowConstraints();
-        rowConstraints0.setPercentHeight(5);
-        gridPane.getRowConstraints().add(rowConstraints0);
-        for (int i = 0; i < periods.size(); i++) {
-            RowConstraints rowConstraints = new RowConstraints();
-            rowConstraints.setPercentHeight(19);
-            gridPane.getRowConstraints().add(rowConstraints);
-        }
         return gridPane;
     }
 
@@ -100,11 +92,21 @@ public class GridPaneController implements InvalidationListener {
             gridPane.add(label, 0, i);
             i++;
         }
+        ;
+        gridPane.getRowConstraints().clear();
+        RowConstraints rowConstraints0 = new RowConstraints();
+        rowConstraints0.setPercentHeight(5);
+        gridPane.getRowConstraints().add(rowConstraints0);
+        for (int j = 0; j < periods.size(); j++) {
+            RowConstraints rowConstraints = new RowConstraints();
+            rowConstraints.setPercentHeight(95/(periods.size() - 1));
+            gridPane.getRowConstraints().add(rowConstraints);
+        }
 
         overlappingen = new int[5][periods.size()];
     }
 
-    public void plaats() {
+    private void plaats() {
         ArrayList<Lecture> lectures = model.getLectures();
         gridPane.getChildren().clear();
         basis();
@@ -136,6 +138,7 @@ public class GridPaneController implements InvalidationListener {
 
     @Override
     public void invalidated(javafx.beans.Observable observable) {
+        periods = model.getPeriods();
         plaats();
     }
 }
