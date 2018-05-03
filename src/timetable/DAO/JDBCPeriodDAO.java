@@ -2,10 +2,7 @@ package timetable.DAO;
 
 import timetable.entity.Period;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class JDBCPeriodDAO implements PeriodDAO {
@@ -30,5 +27,15 @@ public class JDBCPeriodDAO implements PeriodDAO {
             System.out.println(e.getMessage());
         }
         return periods;
+    }
+
+    public void addElement(int hour, int minute) {
+            try (PreparedStatement stmt = connection.prepareStatement("INSERT INTO period(hour, minute) VALUES (?, ?);")) {
+                stmt.setInt(1, hour);
+                stmt.setInt(2, minute);
+                stmt.executeUpdate();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
     }
 }

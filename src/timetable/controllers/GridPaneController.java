@@ -48,6 +48,7 @@ public class GridPaneController implements InvalidationListener {
         column5.setPercentWidth(19);
         basis();
         gridPane.getColumnConstraints().addAll(column0, column1, column2, column3, column4, column5);
+        gridPane.setVisible(false);
         return gridPane;
     }
 
@@ -99,7 +100,7 @@ public class GridPaneController implements InvalidationListener {
         gridPane.getRowConstraints().add(rowConstraints0);
         for (int j = 0; j < periods.size(); j++) {
             RowConstraints rowConstraints = new RowConstraints();
-            rowConstraints.setPercentHeight(95/(periods.size() - 1));
+            rowConstraints.setPercentHeight(95/(periods.size()));
             gridPane.getRowConstraints().add(rowConstraints);
         }
 
@@ -140,5 +141,6 @@ public class GridPaneController implements InvalidationListener {
     public void invalidated(javafx.beans.Observable observable) {
         periods = model.getPeriods();
         plaats();
+        gridPane.setVisible(true);
     }
 }

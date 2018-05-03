@@ -22,6 +22,7 @@ public class AccordionController implements InvalidationListener{
     private ListView<Student> studentListView = new ListView<>();
     private ListView<Teacher> teacherListView = new ListView<>();
     private ListView<Location> locationListView = new ListView<>();
+    private Accordion accordion;
 
     public AccordionController(Model model) {
         this.model = model;
@@ -50,11 +51,12 @@ public class AccordionController implements InvalidationListener{
         );
         TitledPane t3 = new TitledPane("By Professor", teacherListView);
         t3.setMaxHeight(Double.POSITIVE_INFINITY);
-        Accordion accordion = new Accordion();
-        accordion.setPrefHeight(5000);
+        accordion = new Accordion();
+        accordion.setPrefHeight(9001);
         accordion.getPanes().addAll(t1, t2, t3);
         accordion.setPadding(new Insets(0, 0, 0, 0));
         accordion.setPadding(new Insets(10, 5, 10, 10));
+        accordion.setVisible(false);
         return accordion;
     }
 
@@ -63,5 +65,6 @@ public class AccordionController implements InvalidationListener{
         studentListView.setItems(model.getStudents());
         teacherListView.setItems(model.getTeachers());
         locationListView.setItems(model.getLocations());
+        accordion.setVisible(true);
     }
 }

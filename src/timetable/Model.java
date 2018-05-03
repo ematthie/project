@@ -56,6 +56,15 @@ public class Model implements Observable {
         fireInvalidationEvent();
     }
 
+    public void updatePeriods() {
+        try (DataAccesContext dac = dataAccesProvider.getDataAccessContext()) {
+            PeriodDAO dao = dac.getPeriodDAO();
+            setPeriods(dao.selectElements());
+        } catch (Exception e) {
+            System.err.println(e);
+        }
+    }
+
     public ObservableList<Student> getStudents() {
         return students;
     }
@@ -85,12 +94,7 @@ public class Model implements Observable {
 
     public void setUrl(String url) {
         dataAccesProvider = new JDBCDataAccesProvider(url);
-        try (DataAccesContext dac = dataAccesProvider.getDataAccessContext()) {
-            PeriodDAO dao = dac.getPeriodDAO();
-            setPeriods(dao.selectElements());
-        } catch (Exception e) {
-            System.err.println("Oopsie, didn't mean to!");
-        }
+        updatePeriods();
         try (DataAccesContext dac = dataAccesProvider.getDataAccessContext()) {
             StudentDAO dao = dac.getStudentDAO();
             setStudents(dao.selectElements());
@@ -137,5 +141,9 @@ public class Model implements Observable {
         } catch (Exception e) {
             System.err.println("Oopsie, didn't mean to!");
         }
+    }
+
+    public DataAccesProvider getDataAccesProvider() {
+        return dataAccesProvider;
     }
 }

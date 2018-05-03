@@ -12,6 +12,14 @@ public class Period {
         this.minute = minute;
     }
 
+    public int getHour() {
+        return hour;
+    }
+
+    public int getMinute() {
+        return minute;
+    }
+
     @Override
     public String toString() {
         String string = hour + ":" + minute;
