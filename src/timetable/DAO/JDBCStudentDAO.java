@@ -31,4 +31,14 @@ public class JDBCStudentDAO implements StudentDAO {
         }
         return students;
     }
+
+    @Override
+    public void addElement(String name) {
+        try (PreparedStatement stmt = connection.prepareStatement("INSERT INTO students(name) VALUES (?);")) {
+            stmt.setString(1, name);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 }

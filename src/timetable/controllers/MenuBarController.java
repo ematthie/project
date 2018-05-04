@@ -1,23 +1,20 @@
 package timetable.controllers;
 
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.omg.Messaging.SYNC_WITH_TRANSPORT;
-import timetable.DAO.LectureDAO;
+import timetable.DAO.LocationDAO;
 import timetable.DAO.PeriodDAO;
+import timetable.DAO.StudentDAO;
+import timetable.DAO.TeacherDAO;
 import timetable.DataAccesContext;
 import timetable.DataBaseCreator;
 import timetable.Model;
 import timetable.PeriodDialog;
-import timetable.entity.Period;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.sql.SQLException;
+import java.util.Optional;
 
 public class MenuBarController {
 
@@ -28,21 +25,29 @@ public class MenuBarController {
     }
 
     public MenuBar populate(Stage stage) {
-        final Menu menu = new Menu("File");
-        MenuItem menuItem1 = new MenuItem("open");
-        MenuItem menuItem2 = new MenuItem("new");
-        FileChooser fileChooser1 = new FileChooser();
-        fileChooser1.setTitle("Open Resource File");
-        fileChooser1.getExtensionFilters().add(
+        Menu file = new Menu("File");
+        MenuItem open = new MenuItem("open");
+        MenuItem aNew = new MenuItem("new");
+        FileChooser openResourceFile = new FileChooser();
+        openResourceFile.setTitle("Open Resource File");
+        openResourceFile.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("Database Files", "*.db"));
-        FileChooser fileChooser2 = new FileChooser();
-        fileChooser2.setTitle("Open Resource File");
-        fileChooser2.getExtensionFilters().add(
+        FileChooser saveRecourseFile = new FileChooser();
+        saveRecourseFile.setTitle("Open Resource File");
+        saveRecourseFile.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("Database Files", "*.db"));
-        menuItem1.setOnAction(event -> setURL(fileChooser1.showOpenDialog(stage)));
-        menuItem2.setOnAction(event -> newDatabase(fileChooser2.showSaveDialog(stage)));
-        menu.getItems().addAll(menuItem1, menuItem2);
-        return new MenuBar(menu);
+        open.setOnAction(event -> setURL(openResourceFile.showOpenDialog(stage)));
+        aNew.setOnAction(event -> newDatabase(saveRecourseFile.showSaveDialog(stage)));
+        file.getItems().addAll(open, aNew);
+        Menu add = new Menu("Add");
+        MenuItem student = new MenuItem("Student");
+        student.setOnAction(event -> addStudent());
+        MenuItem teacher = new MenuItem("Teacher");
+        teacher.setOnAction(event -> addTeacher());
+        MenuItem location = new MenuItem("Location");
+        location.setOnAction(event -> addLocation());
+        add.getItems().addAll(student, teacher, location);
+        return new MenuBar(file, add);
     }
 
     private void setURL(File file) {
@@ -57,6 +62,66 @@ public class MenuBarController {
         new DataBaseCreator(file.getAbsolutePath());
         model.setUrl(file.getAbsolutePath());
         new PeriodDialog(model);
+    }
+
+    private void addTeacher() {
+        try {
+            TextInputDialog dialog = new TextInputDialog();
+            dialog.setTitle("Add teacher");
+            dialog.setHeaderText("Enter the name of the teacher");
+            dialog.setContentText("Name:");
+            Optional<String> naam = dialog.showAndWait();
+            try (DataAccesContext dac = model.getDataAccesProvider().getDataAccessContext()) {
+                TeacherDAO dao = dac.getTeacherDAO();
+                naam.ifPresent(dao::addElement);
+            } catch (Exception e) {
+                System.out.println("haha kijk nu zeg");
+            } finally {
+                model.updateTeachers();
+            }
+        } catch (Exception e) {
+            //TODO
+        }
+    }
+
+    private void addStudent() {
+        try {
+            TextInputDialog dialog = new TextInputDialog();
+            dialog.setTitle("Add student group");
+            dialog.setHeaderText("Enter the name of the group");
+            dialog.setContentText("Name:");
+            Optional<String> naam = dialog.showAndWait();
+            try (DataAccesContext dac = model.getDataAccesProvider().getDataAccessContext()) {
+                StudentDAO dao = dac.getStudentDAO();
+                naam.ifPresent(dao::addElement);
+            } catch (Exception e) {
+                System.out.println("haha kijk nu zeg");
+            } finally {
+                model.updateStudents();
+            }
+        } catch (Exception e) {
+            //TODO
+        }
+    }
+
+    private void addLocation() {
+        try {
+            TextInputDialog dialog = new TextInputDialog();
+            dialog.setTitle("Add a location");
+            dialog.setHeaderText("Enter the name of the location");
+            dialog.setContentText("Name:");
+            Optional<String> naam = dialog.showAndWait();
+            try (DataAccesContext dac = model.getDataAccesProvider().getDataAccessContext()) {
+                LocationDAO dao = dac.getLocationDAO();
+                naam.ifPresent(dao::addElement);
+            } catch (Exception e) {
+                System.out.println("haha kijk nu zeg");
+            } finally {
+                model.updateLocation();
+            }
+        } catch (Exception e) {
+            //TODO
+        }
     }
 
 }

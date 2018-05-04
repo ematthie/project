@@ -8,4 +8,6 @@ public interface TeacherDAO {
 
     public ArrayList<Teacher> selectElements();
 
+    public void addElement(String name);
+
 }

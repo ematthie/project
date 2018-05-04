@@ -9,6 +9,7 @@ import timetable.entity.*;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Model implements Observable {
@@ -61,7 +62,7 @@ public class Model implements Observable {
             PeriodDAO dao = dac.getPeriodDAO();
             setPeriods(dao.selectElements());
         } catch (Exception e) {
-            System.err.println(e);
+            System.err.println("mohow zeg");
         }
     }
 
@@ -145,5 +146,32 @@ public class Model implements Observable {
 
     public DataAccesProvider getDataAccesProvider() {
         return dataAccesProvider;
+    }
+
+    public void updateTeachers() {
+        try (DataAccesContext dac = dataAccesProvider.getDataAccessContext()) {
+            TeacherDAO dao = dac.getTeacherDAO();
+            setTeachers(dao.selectElements());
+        } catch (Exception e) {
+            System.err.println("mohow zeg");
+        }
+    }
+
+    public void updateStudents() {
+        try (DataAccesContext dac = dataAccesProvider.getDataAccessContext()) {
+            StudentDAO dao = dac.getStudentDAO();
+            setStudents(dao.selectElements());
+        } catch (Exception e) {
+            System.err.println("mohow zeg");
+        }
+    }
+
+    public void updateLocation() {
+        try (DataAccesContext dac = dataAccesProvider.getDataAccessContext()) {
+            LocationDAO dao = dac.getLocationDAO();
+            setLocations(dao.selectElements());
+        } catch (Exception e) {
+            System.err.println("mohow zeg");
+        }
     }
 }

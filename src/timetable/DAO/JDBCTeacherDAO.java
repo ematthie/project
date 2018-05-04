@@ -31,4 +31,13 @@ public class JDBCTeacherDAO implements TeacherDAO {
         }
         return teachers;
     }
+
+    public void addElement(String name) {
+        try (PreparedStatement stmt = connection.prepareStatement("INSERT INTO teacher(name) VALUES (?);")) {
+            stmt.setString(1, name);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 }

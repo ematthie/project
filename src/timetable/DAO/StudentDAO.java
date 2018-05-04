@@ -8,4 +8,6 @@ public interface StudentDAO {
 
     public ArrayList<Student> selectElements();
 
+    public void addElement(String naam);
+
 }

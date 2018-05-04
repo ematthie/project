@@ -15,7 +15,7 @@ public class JDBCPeriodDAO implements PeriodDAO {
 
     public ArrayList<Period> selectElements() {
         ArrayList<Period> periods = new ArrayList<>();
-        try (PreparedStatement stmt = connection.prepareStatement("SELECT * FROM period")){
+        try (PreparedStatement stmt = connection.prepareStatement("SELECT * FROM period ORDER BY hour, minute ASC")){
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 int id = rs.getInt(1);

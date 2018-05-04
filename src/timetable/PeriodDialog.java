@@ -4,9 +4,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import timetable.DAO.PeriodDAO;
+import timetable.DAO.TeacherDAO;
+
+import java.util.Optional;
 
 public class PeriodDialog extends Dialog {
 

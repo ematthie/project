@@ -8,4 +8,6 @@ public interface LocationDAO {
 
     public ArrayList<Location> selectElements();
 
+    public void addElement(String naam);
+
 }

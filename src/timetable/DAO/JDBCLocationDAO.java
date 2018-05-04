@@ -31,4 +31,14 @@ public class JDBCLocationDAO implements LocationDAO {
         }
         return locations;
     }
+
+    @Override
+    public void addElement(String naam) {
+        try (PreparedStatement stmt = connection.prepareStatement("INSERT INTO location(name) VALUES (?);")) {
+            stmt.setString(1, naam);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 }
