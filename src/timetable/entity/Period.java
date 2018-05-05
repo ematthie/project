@@ -22,10 +22,22 @@ public class Period {
 
     @Override
     public String toString() {
-        String string = hour + ":" + minute;
+        String hourString;
+        String minuteString;
         if (minute < 10) {
-            string += '0';
+            minuteString = "0" + minute;
+        } else {
+            minuteString = minute + "";
         }
-        return string;
+        if (hour < 10) {
+            hourString = "0" + hour;
+        } else {
+            hourString = hour + "";
+        }
+        return hourString + ':' + minuteString;
+    }
+
+    public int getId() {
+        return id;
     }
 }

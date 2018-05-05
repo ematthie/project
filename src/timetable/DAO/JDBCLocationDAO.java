@@ -33,9 +33,15 @@ public class JDBCLocationDAO implements LocationDAO {
     }
 
     @Override
-    public void addElement(String naam) {
+    public void addElement(String name) throws SQLException {
+        ArrayList<Location> locations = selectElements();
+        for (Location location : locations) {
+            if (location.getName().equals(name)) {
+                throw new SQLException("Je hebt deze teacher al toegevoegd");
+            }
+        }
         try (PreparedStatement stmt = connection.prepareStatement("INSERT INTO location(name) VALUES (?);")) {
-            stmt.setString(1, naam);
+            stmt.setString(1, name);
             stmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());

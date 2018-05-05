@@ -1,15 +1,17 @@
 package timetable.DAO;
 
-import timetable.entity.Lecture;
+import timetable.entity.*;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public interface LectureDAO {
 
-    public ArrayList<Lecture> selectElementsByRichting(int value);
+    ArrayList<Lecture> selectElementsByRichting(int value);
 
-    public ArrayList<Lecture> selectElementsByLocatie(int value);
+    ArrayList<Lecture> selectElementsByLocatie(int value);
 
-    public ArrayList<Lecture> selectElementsByTeacher(int value);
+    ArrayList<Lecture> selectElementsByTeacher(int value);
 
+    void addElement(String name, int studentID, int teacherID, int locationID, int day, int periodID, Integer duration) throws SQLException;
 }

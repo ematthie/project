@@ -29,13 +29,19 @@ public class JDBCPeriodDAO implements PeriodDAO {
         return periods;
     }
 
-    public void addElement(int hour, int minute) {
-            try (PreparedStatement stmt = connection.prepareStatement("INSERT INTO period(hour, minute) VALUES (?, ?);")) {
-                stmt.setInt(1, hour);
-                stmt.setInt(2, minute);
-                stmt.executeUpdate();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
+    public void addElement(int hour, int minute) throws SQLException {
+        ArrayList<Period> periods = selectElements();
+        for (Period period : periods) {
+            if (period.getHour() == hour && period.getMinute() == minute) {
+                throw new SQLException("Je hebt deze periode al toegevoegd");
             }
+        }
+        try (PreparedStatement stmt = connection.prepareStatement("INSERT INTO period(hour, minute) VALUES (?, ?);")) {
+            stmt.setInt(1, hour);
+            stmt.setInt(2, minute);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }

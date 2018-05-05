@@ -32,7 +32,13 @@ public class JDBCTeacherDAO implements TeacherDAO {
         return teachers;
     }
 
-    public void addElement(String name) {
+    public void addElement(String name) throws SQLException {
+        ArrayList<Teacher> teachers = selectElements();
+        for (Teacher teacher : teachers) {
+            if (teacher.getName().equals(name)) {
+                throw new SQLException("Je hebt deze teacher al toegevoegd");
+            }
+        }
         try (PreparedStatement stmt = connection.prepareStatement("INSERT INTO teacher(name) VALUES (?);")) {
             stmt.setString(1, name);
             stmt.executeUpdate();

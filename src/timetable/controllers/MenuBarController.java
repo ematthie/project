@@ -3,14 +3,12 @@ package timetable.controllers;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import timetable.*;
 import timetable.DAO.LocationDAO;
-import timetable.DAO.PeriodDAO;
 import timetable.DAO.StudentDAO;
 import timetable.DAO.TeacherDAO;
-import timetable.DataAccesContext;
-import timetable.DataBaseCreator;
-import timetable.Model;
-import timetable.PeriodDialog;
+import timetable.dialogs.LectureDialog;
+import timetable.dialogs.PeriodDialog;
 
 import java.io.File;
 import java.sql.SQLException;
@@ -46,22 +44,37 @@ public class MenuBarController {
         teacher.setOnAction(event -> addTeacher());
         MenuItem location = new MenuItem("Location");
         location.setOnAction(event -> addLocation());
-        add.getItems().addAll(student, teacher, location);
+        MenuItem lecture = new MenuItem("Lecture");
+        lecture.setOnAction(event -> addLecture());
+        Menu edit = new Menu("edit");
+        MenuItem studentEdit = new MenuItem("student");
+        studentEdit.setOnAction(event -> editStudent());
+        add.getItems().addAll(student, teacher, location, lecture);
         return new MenuBar(file, add);
+    }
+
+    private void editStudent() {
+//
+    }
+
+    private void addLecture() {
+        new LectureDialog(model);
     }
 
     private void setURL(File file) {
         try {
             model.setUrl(file.getAbsolutePath());
-        } catch (Exception ex) {
+        } catch (Throwable ex) {
             System.out.println("ongeldige databank");
         }
     }
 
     private void newDatabase(File file) {
-        new DataBaseCreator(file.getAbsolutePath());
-        model.setUrl(file.getAbsolutePath());
-        new PeriodDialog(model);
+        if (file != null) {
+            new DataBaseCreator(file.getAbsolutePath());
+            model.setUrl(file.getAbsolutePath());
+            new PeriodDialog(model);
+        }
     }
 
     private void addTeacher() {
@@ -73,9 +86,15 @@ public class MenuBarController {
             Optional<String> naam = dialog.showAndWait();
             try (DataAccesContext dac = model.getDataAccesProvider().getDataAccessContext()) {
                 TeacherDAO dao = dac.getTeacherDAO();
-                naam.ifPresent(dao::addElement);
-            } catch (Exception e) {
-                System.out.println("haha kijk nu zeg");
+                if (naam.isPresent()) {
+                    dao.addElement(naam.get());
+                }
+            } catch (SQLException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setHeaderText(e.getMessage());
+                alert.show();
+            } catch (Exception e){
+                // TODO
             } finally {
                 model.updateTeachers();
             }
@@ -93,9 +112,15 @@ public class MenuBarController {
             Optional<String> naam = dialog.showAndWait();
             try (DataAccesContext dac = model.getDataAccesProvider().getDataAccessContext()) {
                 StudentDAO dao = dac.getStudentDAO();
-                naam.ifPresent(dao::addElement);
-            } catch (Exception e) {
-                System.out.println("haha kijk nu zeg");
+                if (naam.isPresent()) {
+                    dao.addElement(naam.get());
+                }
+            } catch (SQLException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setHeaderText(e.getMessage());
+                alert.show();
+            } catch (Exception e){
+                // TODO
             } finally {
                 model.updateStudents();
             }
@@ -113,10 +138,17 @@ public class MenuBarController {
             Optional<String> naam = dialog.showAndWait();
             try (DataAccesContext dac = model.getDataAccesProvider().getDataAccessContext()) {
                 LocationDAO dao = dac.getLocationDAO();
-                naam.ifPresent(dao::addElement);
-            } catch (Exception e) {
-                System.out.println("haha kijk nu zeg");
-            } finally {
+                if (naam.isPresent()) {
+                    dao.addElement(naam.get());
+                }
+            } catch (SQLException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setHeaderText(e.getMessage());
+                alert.show();
+            } catch (Exception e){
+                // TODO
+            }
+            finally {
                 model.updateLocation();
             }
         } catch (Exception e) {

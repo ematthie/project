@@ -33,7 +33,13 @@ public class JDBCStudentDAO implements StudentDAO {
     }
 
     @Override
-    public void addElement(String name) {
+    public void addElement(String name) throws SQLException {
+        ArrayList<Student> students = selectElements();
+        for (Student student : students) {
+            if (student.getName().equals(name)) {
+                throw new SQLException("Je hebt deze teacher al toegevoegd");
+            }
+        }
         try (PreparedStatement stmt = connection.prepareStatement("INSERT INTO students(name) VALUES (?);")) {
             stmt.setString(1, name);
             stmt.executeUpdate();

@@ -40,4 +40,16 @@ public class Lecture {
     public String toString() {
         return course;
     }
+
+    public int getStudentsID() {
+        return studentsID;
+    }
+
+    public int getTeacherID() {
+        return teacherID;
+    }
+
+    public int getLocationID() {
+        return locationID;
+    }
 }

@@ -122,7 +122,7 @@ public class Model implements Observable {
             LectureDAO dao = dac.getLectureDAO();
             setLectures(dao.selectElementsByRichting(id));
         } catch (Exception e) {
-            System.err.println("Oopsie, didn't mean to!");
+            System.err.println("Oopsie, didn't mean to!3");
         }
     }
 
@@ -131,7 +131,7 @@ public class Model implements Observable {
             LectureDAO dao = dac.getLectureDAO();
             setLectures(dao.selectElementsByLocatie(id));
         } catch (Exception e) {
-            System.err.println("Oopsie, didn't mean to!");
+            System.err.println("Oopsie, didn't mean to!2");
         }
     }
 
@@ -140,7 +140,7 @@ public class Model implements Observable {
             LectureDAO dao = dac.getLectureDAO();
             setLectures(dao.selectElementsByTeacher(id));
         } catch (Exception e) {
-            System.err.println("Oopsie, didn't mean to!");
+            System.err.println("Oopsie, didn't mean to!1");
         }
     }
 
