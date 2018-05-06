@@ -11,4 +11,5 @@ public interface LocationDAO {
 
     public void addElement(String naam) throws SQLException;
 
+    void updateElement(int id, String text);
 }

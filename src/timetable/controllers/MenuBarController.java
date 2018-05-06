@@ -7,8 +7,7 @@ import timetable.*;
 import timetable.DAO.LocationDAO;
 import timetable.DAO.StudentDAO;
 import timetable.DAO.TeacherDAO;
-import timetable.dialogs.LectureDialog;
-import timetable.dialogs.PeriodDialog;
+import timetable.dialogs.*;
 
 import java.io.File;
 import java.sql.SQLException;
@@ -46,15 +45,34 @@ public class MenuBarController {
         location.setOnAction(event -> addLocation());
         MenuItem lecture = new MenuItem("Lecture");
         lecture.setOnAction(event -> addLecture());
-        Menu edit = new Menu("edit");
-        MenuItem studentEdit = new MenuItem("student");
+        Menu edit = new Menu("Edit");
+        MenuItem studentEdit = new MenuItem("Student");
         studentEdit.setOnAction(event -> editStudent());
+        MenuItem teacherEdit = new MenuItem("Teacher");
+        teacherEdit.setOnAction(event -> editTeacher());
+        MenuItem locationEdit = new MenuItem("Location");
+        locationEdit.setOnAction(event -> editLocation());
+        MenuItem lectureEdit = new MenuItem("Lecture");
+        lectureEdit.setOnAction(event -> editLecture());
+        edit.getItems().addAll(studentEdit, teacherEdit, locationEdit);
         add.getItems().addAll(student, teacher, location, lecture);
-        return new MenuBar(file, add);
+        return new MenuBar(file, add, edit);
+    }
+
+    private void editLecture() {
+        new editLectureDialog();
+    }
+
+    private void editLocation() {
+        new editLocationDialog(model);
+    }
+
+    private void editTeacher() {
+        new editTeacherDialog(model);
     }
 
     private void editStudent() {
-//
+        new editStudentDialog(model);
     }
 
     private void addLecture() {

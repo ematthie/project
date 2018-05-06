@@ -13,7 +13,7 @@ import timetable.Model;
 import java.sql.SQLException;
 import java.util.Optional;
 
-public class PeriodDialog extends Dialog {
+public class PeriodDialog {
 
     private TextField uur = new TextField("voeg uur toe");
     private TextField min = new TextField("voeg minuut toe");

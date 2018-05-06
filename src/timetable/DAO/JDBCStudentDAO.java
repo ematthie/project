@@ -47,4 +47,15 @@ public class JDBCStudentDAO implements StudentDAO {
             System.out.println(e.getMessage());
         }
     }
+
+    @Override
+    public void updateElement(int id, String text) {
+        try (PreparedStatement stmnt = connection.prepareStatement("UPDATE students SET name = ? WHERE id = ?;")) {
+            stmnt.setString(1, text);
+            stmnt.setInt(2, id);
+            stmnt.executeUpdate();
+        } catch (SQLException ex) {
+            // TODO
+        }
+    }
 }

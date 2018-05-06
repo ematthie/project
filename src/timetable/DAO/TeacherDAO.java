@@ -11,4 +11,5 @@ public interface TeacherDAO {
 
     public void addElement(String name) throws SQLException;
 
+    void updateElement(int id, String text);
 }
