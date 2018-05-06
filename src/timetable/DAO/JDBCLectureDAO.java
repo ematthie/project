@@ -68,7 +68,6 @@ public class JDBCLectureDAO implements LectureDAO {
     }
 
     public void addElement(String name, int studentID, int teacherID, int locationID, int day, int periodID, Integer duration) throws SQLException {
-        System.out.println(day);
         ArrayList<Lecture> lectures = selectElements();
         for (Lecture lecture : lectures) {
             if (lecture.getCourse().equals(name)
@@ -94,8 +93,21 @@ public class JDBCLectureDAO implements LectureDAO {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        for (Lecture lecture : selectElements()) {
-            System.out.println("" + lecture.getDuration() + lecture.getStart() + lecture.getDay());
+    }
+
+    @Override
+    public void removeElement(Lecture lecture) {
+        try (PreparedStatement stmnt = connection.prepareStatement("DELETE FROM lecture WHERE students_id = ? AND teacher_id = ? AND location_id = ? AND course = ? AND day = ? AND first_block = ? AND duration = ?")) {
+            stmnt.setInt(1, lecture.getStudentsID());
+            stmnt.setInt(2, lecture.getTeacherID());
+            stmnt.setInt(3, lecture.getLocationID());
+            stmnt.setString(4, lecture.getCourse());
+            stmnt.setInt(5, lecture.getDay());
+            stmnt.setInt(6, lecture.getStart());
+            stmnt.setInt(7, lecture.getDuration());
+            stmnt.executeUpdate();
+        } catch (SQLException ex) {
+            // TODO
         }
     }
 

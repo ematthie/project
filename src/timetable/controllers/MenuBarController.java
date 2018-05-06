@@ -45,6 +45,7 @@ public class MenuBarController {
         location.setOnAction(event -> addLocation());
         MenuItem lecture = new MenuItem("Lecture");
         lecture.setOnAction(event -> addLecture());
+        add.getItems().addAll(student, teacher, location, lecture);
         Menu edit = new Menu("Edit");
         MenuItem studentEdit = new MenuItem("Student");
         studentEdit.setOnAction(event -> editStudent());
@@ -54,13 +55,12 @@ public class MenuBarController {
         locationEdit.setOnAction(event -> editLocation());
         MenuItem lectureEdit = new MenuItem("Lecture");
         lectureEdit.setOnAction(event -> editLecture());
-        edit.getItems().addAll(studentEdit, teacherEdit, locationEdit);
-        add.getItems().addAll(student, teacher, location, lecture);
+        edit.getItems().addAll(studentEdit, teacherEdit, locationEdit, lectureEdit);
         return new MenuBar(file, add, edit);
     }
 
     private void editLecture() {
-        new editLectureDialog();
+        new editLectureDialog(model);
     }
 
     private void editLocation() {

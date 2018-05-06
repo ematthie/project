@@ -24,7 +24,7 @@ public class Main extends Application {
         borderPane.setLeft(accordionController.populate());
         GridPane gridPane = gridPaneController.populate();
         borderPane.setCenter(gridPane);
-        Scene scene = new Scene(borderPane);
+        Scene scene = new Scene(borderPane, 1250, 750);
         stage.setScene(scene);
         stage.setTitle("rooster");
         stage.setFullScreen(true);
